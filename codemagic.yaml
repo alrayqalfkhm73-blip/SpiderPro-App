@@ -6,7 +6,7 @@ workflows:
     environment:
       flutter: stable
     scripts:
-      - name: Generate missing folders
+      - name: Generate missing platform folders
         script: |
           if [ ! -d "android" ]; then
             flutter create --platforms=android .
