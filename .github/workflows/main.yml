@@ -22,20 +22,26 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Generate Android Folder
-        run: flutter create --platforms=android .
+      - name: Create Clean Flutter Project
+        run: flutter create temp_app
 
-      - name: Get dependencies
-        run: flutter pub get
+      - name: Copy Your Code
+        run: |
+          cp pubspec.yaml temp_app/pubspec.yaml
+          cp lib/main.dart temp_app/lib/main.dart
 
-      - name: Clean project
-        run: flutter clean
+      - name: Add Internet Permission
+        run: |
+          sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/>\n    <application/' temp_app/android/app/src/main/AndroidManifest.xml
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Get Dependencies & Build APK
+        run: |
+          cd temp_app
+          flutter pub get
+          flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Spider-Pro-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: temp_app/build/app/outputs/flutter-apk/app-release.apk
